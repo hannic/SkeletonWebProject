@@ -1,0 +1,266 @@
+\documentclass[footexclude,twocolumn,DIV25,fontsize=10pt]{scrreprt} 
+
+% Author: Nate Murray (based on Steve Tayon's Clojure cheat sheet)
+% Comments, errors, suggestions: nate@natemurray.com
+
+% License
+% Eclipse Public License v1.0
+% http://opensource.org/licenses/eclipse-1.0.php
+
+% Packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{textcomp}
+\usepackage[english]{babel}
+\usepackage{tabularx}
+\usepackage{enumerate}
+
+\usepackage[table]{xcolor}
+
+% Set column space
+\setlength{\columnsep}{0.25em}
+
+% Define colours
+\definecolorset{hsb}{}{}{red,0,.4,0.95;orange,.1,.4,0.95;green,.25,.4,0.95;yellow,.15,.4,0.95}
+\definecolorset{hsb}{}{}{blue,.55,.4,0.95;purple,.7,.4,0.95;pink,.8,.4,0.95;blue2,.58,.4,0.95}
+\definecolorset{hsb}{}{}{magenta,.9,.4,0.95;green2,.29,.4,0.95}
+
+% Redefine sections
+\makeatletter
+\renewcommand{\section}{\@startsection{section}{1}{0mm}
+	{-1.7ex}{0.7ex}{\normalfont\large\bfseries}}
+\renewcommand{\subsection}{\@startsection{subsection}{2}{0mm}
+	{-1.7ex}{0.5ex}{\normalfont\normalsize\bfseries}}
+\makeatother
+
+% No section numbers
+\setcounter{secnumdepth}{0}
+
+% No indentation
+\setlength{\parindent}{0em}
+
+% No header and footer
+\pagestyle{empty}
+
+
+% A few shortcuts
+\newcommand{\cmd}[1] {\texttt{\textbf{{#1}}}}
+\newcommand{\cmdline}[1] {
+	\begin{tabularx}{\hsize}{X}
+			\texttt{\textbf{{#1}}}
+	\end{tabularx}
+}
+
+\newcommand{\colouredbox}[2] {
+	\colorbox{#1!40}{
+		\begin{minipage}{0.95\linewidth}
+			{
+			\rowcolors[]{1}{#1!20}{#1!10}
+			#2
+			}
+		\end{minipage}
+	}
+}
+
+% redefine enumerate env for closer spacing
+\renewenvironment{enumerate}%
+  {\begin{list}{\arabic{enumi}.}%
+     {\topsep=0in\itemsep=0in\parsep=0in\partopsep=0in\usecounter{enumi}}%
+   }{\end{list}}
+
+
+\begin{document}
+
+\centerline{\Large{\textbf{Git Cheat Sheet}}}
+%% \centerline{{\large{\textbf{\textit{git: first it sucks, then it's awesome}}}}}
+
+\colouredbox{green}{
+\section{Documentation \textmd{\textrm{(http://progit.org/book/)}}}
+\cmdline{git help [cmd]}
+}
+
+\colouredbox{magenta}{
+\section{For SVN Users}
+
+\subsection{Tracking Projects}
+\begin{tabularx}{\hsize}{lX}
+\cmd{git clone url} & \cmd{svn checkout url} \\
+\cmd{git pull} & \cmd{svn update} \\
+\end{tabularx}
+
+\subsection{Create Repository}
+\begin{tabularx}{\hsize}{lX}
+\cmd{git init} & \cmd{svnadmin create repo} \\
+\cmd{git add .} & \cmd{svn import file://repo} \\
+\cmd{git commit} &  \\
+\end{tabularx}
+
+\subsection{Files}
+\begin{tabularx}{\hsize}{lX}
+\cmd{git add file} & \cmd{svn add file} \\
+\cmd{git rm file} & \cmd{svn rm file} \\
+\cmd{git mv file} & \cmd{svn mv file} \\
+\end{tabularx}
+
+\subsection{Committing}
+\begin{tabularx}{\hsize}{lX}
+\cmd{git commit -a } & \cmd{svn commit} \\
+\end{tabularx}
+
+\subsection{Browsing}
+\begin{tabularx}{\hsize}{lX}
+\cmd{git log} & \cmd{svn log | less} \\
+\cmd{git blame file} & \cmd{svn blame file} \\
+\cmd{git diff} & \cmd{svn diff | less} \\
+\end{tabularx}
+
+}
+
+
+\colouredbox{blue}{
+\section{Getting Started}
+
+\subsection{Setup}
+\begin{tabularx}{\hsize}{lX}
+Install:& \cmd{sudo port install git-core +svn}\\
+Name:   & \cmd{git config --{}--global user.name \textbackslash}\\
+        & \cmd{  "Nate Murray"}\\
+Email:  & \cmd{git config --{}--global user.email \textbackslash}\\
+        & \cmd{  "nate@xcombinator.com"}\\
+\end{tabularx}
+
+\subsection{First Repo}
+
+\begin{tabularx}{\hsize}{lX}
+ & \cmd{cd $\sim$} \\
+ & \cmd{mkdir -p projects/demo} \\
+ & \cmd{cd projects/demo} \\
+ & \cmd{git init} \\
+ & \cmd{git status} \\
+ & \cmd{ls -a} \\
+ & \cmd{echo "version 1" > test.txt} \\
+ & \cmd{git status} \\
+ & \cmd{git add test.txt} \\
+ & \cmd{git status} \\
+ & \cmd{git commit -m "added version one"} \\
+ & \cmd{git status} \\
+
+\end{tabularx}
+
+\subsection{Aliases}
+\begin{tabularx}{\hsize}{lX}
+st:&\cmd{git config --global alias.st status} \\
+ci:&\cmd{git config --global alias.ci commit} \\
+ca:&\cmd{git config --global alias.ca commit -a} \\
+\end{tabularx}
+}
+
+
+\colouredbox{green}{
+\section{GUI}
+\begin{tabularx}{\hsize}{lX}
+Commits: & \cmd{gitx} \\
+Merge: & \cmd{git mergetool -t opendiff} \\
+\end{tabularx}
+
+}
+
+\colouredbox{orange}{
+\section{Internals}
+
+\begin{tabularx}{\hsize}{lX}
+View Log: & \cmd{git log} \\
+Show: & \cmd{git show a8dn3  \# sha}  \\
+Cat: & \cmd{git cat-file -p 9s2j \# sha} \\
+\end{tabularx}
+
+}
+
+\colouredbox{yellow}{
+\section{Branching \& Merging}
+\begin{tabularx}{\hsize}{lX}
+List:     & \cmd{git branch} \\
+Create:   & \cmd{git branch testing} \\
+Checkout: & \cmd{git checkout testing} \\
+          & \cmd{\# work, make some commits} \\
+Back:     & \cmd{git checkout master} \\
+Merge:    & \cmd{git merge testing} \\
+Create:   & \cmd{git checkout -b new-branch} \\
+Delete:   & \cmd{git branch -d new-branch} \\
+\end{tabularx}
+}
+
+
+
+
+
+\colouredbox{blue2}{
+\section{Managing Remotes}
+\begin{tabularx}{\hsize}{lX}
+Clone: &     \cmd{git clone url} \\
+List: &     \cmd{git remote -v} \\
+Send: &     \cmd{git push } \\
+      &     \cmd{git push origin master} \\
+Recv: &     \cmd{git pull } \\
+      &     \cmd{git pull origin master} \\
+Add:  &     \cmd{git remote add name url} \\
+Fetch:&     \cmd{git fetch name} \\
+Checkout:&  \cmd{git checkout name/master} \\
+\end{tabularx}
+}
+
+\colouredbox{red}{
+\section{3 Principles}
+\begin{enumerate}{}{}
+  \item (Almost) everything is local
+  \item Git commits are snapshots
+  \item Branching is cheap, use it often
+\end{enumerate}
+}
+
+\colouredbox{yellow}{
+\section{Next Steps}
+\begin{tabularx}{\hsize}{lX}
+  & \cmd{git tag name} \\
+  & \cmd{git rebase commit} \\
+  & \cmd{git cherry-pick commit} \\
+  & \cmd{git bisect} \\
+  & \cmd{git-svn} \\
+  & hooks \\
+  & tracking branches \\
+  & submodules \\
+  & interactive staging \\
+  & squashing commits \\
+  & repository hosting \\
+  & patches via email \\
+  & \cmd{gitjour} \\
+\end{tabularx}
+}
+
+
+
+
+
+
+\begin{flushright}
+\footnotesize
+\rule{0.7\linewidth}{0.25pt}
+\verb!$Revision: 1.1, $Date: August 31, 2010!\\
+\verb!Nate Murray (nmurray@xcombinator.com)!
+\verb!See also: http://book.git-scm.com/!
+\verb!          http://git.or.cz/course/svn.html!
+\verb!Based on Steve Taylon's Clojure Cheat Sheet!
+\end{flushright}
+
+% history
+%
+% v1.00
+% First version based on API documentation
+% http://incanter.org/docs/api
+% LaTeX format based on Steve Tayon's Clojure Cheat Sheet
+%
+% v1.1
+% Removed redundancies from Charts and Plots section
+
+\end{document}
+
